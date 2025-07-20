@@ -4,15 +4,15 @@
  */
 package edu.fiu.adwise.encryption_test;
 
-import edu.fiu.adwise.homomorphic_encryption.dgk.DGKOperations;
-import edu.fiu.adwise.homomorphic_encryption.dgk.DGKPrivateKey;
-import edu.fiu.adwise.homomorphic_encryption.dgk.DGKPublicKey;
-import edu.fiu.adwise.homomorphic_encryption.elgamal.ElGamalPrivateKey;
-import edu.fiu.adwise.homomorphic_encryption.misc.HomomorphicException;
-import edu.fiu.adwise.homomorphic_encryption.misc.NTL;
-import edu.fiu.adwise.homomorphic_encryption.paillier.PaillierKeyPairGenerator;
-import edu.fiu.adwise.homomorphic_encryption.dgk.DGKKeyPairGenerator;
-import edu.fiu.adwise.homomorphic_encryption.elgamal.ElGamalKeyPairGenerator;
+import edu.fiu.adwise.ciphercraft.dgk.DGKOperations;
+import edu.fiu.adwise.ciphercraft.dgk.DGKPrivateKey;
+import edu.fiu.adwise.ciphercraft.dgk.DGKPublicKey;
+import edu.fiu.adwise.ciphercraft.elgamal.ElGamalPrivateKey;
+import edu.fiu.adwise.ciphercraft.misc.HomomorphicException;
+import edu.fiu.adwise.ciphercraft.misc.NTL;
+import edu.fiu.adwise.ciphercraft.paillier.PaillierKeyPairGenerator;
+import edu.fiu.adwise.ciphercraft.dgk.DGKKeyPairGenerator;
+import edu.fiu.adwise.ciphercraft.elgamal.ElGamalKeyPairGenerator;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -20,7 +20,7 @@ import java.net.Socket;
 import java.security.KeyPair;
 import java.util.List;
 
-import edu.fiu.adwise.homomorphic_encryption.socialistmillionaire.*;
+import edu.fiu.adwise.ciphercraft.socialistmillionaire.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.apache.logging.log4j.LogManager;

@@ -112,11 +112,11 @@ publishing {
             from components.java
 
             pom {
-                name.set('ciphercraft')
+                name.set('Ciphercraft')
                 description.set('This is a library that implements partially homomorphic encryption algorithms: ' +
                         'Paillier, ElGamal, and DGK. This also implements various two-party protocols for secure ' +
                         'computation such as multiplication, division and comparison')
-                url.set('https://github.com/adwise-fiu/Homomorphic_Encryption')
+                url.set('https://github.com/adwise-fiu/Ciphercraft')
 
                 licenses {
                     license {
@@ -130,13 +130,19 @@ publishing {
                         id.set('AndrewQuijano')
                         name.set('Andrew Quijano')
                         email.set('andrew.quijano@nyu.edu')
+                        roles.add('Lead Developer')
                     }
                 }
 
+                organization {
+                    name.set('New York University')
+                    url.set('https://www.nyu.edu')
+                }
+
                 scm {
-                    connection.set('scm:git:git://github.com/adwise-fiu/Homomorphic_Encryption.git')
-                    developerConnection.set('scm:git:ssh://github.com:adwise-fiu/Homomorphic_Encryption.git')
-                    url.set('https://github.com/adwise-fiu/Homomorphic_Encryption')
+                    connection.set('scm:git:git://github.com/adwise-fiu/Ciphercraft.git')
+                    developerConnection.set('scm:git:ssh://github.com:adwise-fiu/Ciphercraft.git')
+                    url.set('https://github.com/adwise-fiu/Ciphercraft')
                 }
             }
         }

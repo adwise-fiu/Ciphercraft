@@ -4,13 +4,13 @@
  */
 package edu.fiu.adwise.encryption_test;
 
-import edu.fiu.adwise.homomorphic_encryption.elgamal.ElGamalCipher;
-import edu.fiu.adwise.homomorphic_encryption.elgamal.ElGamalPrivateKey;
-import edu.fiu.adwise.homomorphic_encryption.elgamal.ElGamalPublicKey;
-import edu.fiu.adwise.homomorphic_encryption.elgamal.ElGamal_Ciphertext;
-import edu.fiu.adwise.homomorphic_encryption.misc.HomomorphicException;
-import edu.fiu.adwise.homomorphic_encryption.misc.NTL;
-import edu.fiu.adwise.homomorphic_encryption.socialistmillionaire.alice_elgamal;
+import edu.fiu.adwise.ciphercraft.elgamal.ElGamalCipher;
+import edu.fiu.adwise.ciphercraft.elgamal.ElGamalPrivateKey;
+import edu.fiu.adwise.ciphercraft.elgamal.ElGamalPublicKey;
+import edu.fiu.adwise.ciphercraft.elgamal.ElGamal_Ciphertext;
+import edu.fiu.adwise.ciphercraft.misc.HomomorphicException;
+import edu.fiu.adwise.ciphercraft.misc.NTL;
+import edu.fiu.adwise.ciphercraft.socialistmillionaire.alice_elgamal;
 
 import java.io.IOException;
 import java.math.BigInteger;

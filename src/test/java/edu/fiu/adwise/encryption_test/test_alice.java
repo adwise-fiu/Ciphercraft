@@ -9,16 +9,16 @@ import java.math.BigInteger;
 import java.security.KeyPair;
 import java.util.Arrays;
 
-import edu.fiu.adwise.homomorphic_encryption.socialistmillionaire.alice_joye;
-import edu.fiu.adwise.homomorphic_encryption.dgk.DGKOperations;
-import edu.fiu.adwise.homomorphic_encryption.dgk.DGKPrivateKey;
-import edu.fiu.adwise.homomorphic_encryption.dgk.DGKPublicKey;
-import edu.fiu.adwise.homomorphic_encryption.misc.HomomorphicException;
-import edu.fiu.adwise.homomorphic_encryption.misc.NTL;
-import edu.fiu.adwise.homomorphic_encryption.paillier.PaillierCipher;
-import edu.fiu.adwise.homomorphic_encryption.paillier.PaillierPrivateKey;
-import edu.fiu.adwise.homomorphic_encryption.paillier.PaillierPublicKey;
-import edu.fiu.adwise.homomorphic_encryption.socialistmillionaire.alice;
+import edu.fiu.adwise.ciphercraft.socialistmillionaire.alice_joye;
+import edu.fiu.adwise.ciphercraft.dgk.DGKOperations;
+import edu.fiu.adwise.ciphercraft.dgk.DGKPrivateKey;
+import edu.fiu.adwise.ciphercraft.dgk.DGKPublicKey;
+import edu.fiu.adwise.ciphercraft.misc.HomomorphicException;
+import edu.fiu.adwise.ciphercraft.misc.NTL;
+import edu.fiu.adwise.ciphercraft.paillier.PaillierCipher;
+import edu.fiu.adwise.ciphercraft.paillier.PaillierPrivateKey;
+import edu.fiu.adwise.ciphercraft.paillier.PaillierPublicKey;
+import edu.fiu.adwise.ciphercraft.socialistmillionaire.alice;
 
 import static org.junit.Assert.*;
 import org.apache.logging.log4j.LogManager;

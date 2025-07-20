@@ -9,9 +9,9 @@ import java.math.BigInteger;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import edu.fiu.adwise.homomorphic_encryption.socialistmillionaire.bob_joye;
-import edu.fiu.adwise.homomorphic_encryption.misc.HomomorphicException;
-import edu.fiu.adwise.homomorphic_encryption.socialistmillionaire.bob;
+import edu.fiu.adwise.ciphercraft.socialistmillionaire.bob_joye;
+import edu.fiu.adwise.ciphercraft.misc.HomomorphicException;
+import edu.fiu.adwise.ciphercraft.socialistmillionaire.bob;
 
 import static org.junit.Assert.*;
 import org.apache.logging.log4j.LogManager;

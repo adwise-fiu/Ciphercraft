@@ -4,11 +4,11 @@
  */
 package edu.fiu.adwise.encryption_test;
 
-import edu.fiu.adwise.homomorphic_encryption.paillier.*;
+import edu.fiu.adwise.ciphercraft.paillier.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import edu.fiu.adwise.homomorphic_encryption.misc.HomomorphicException;
+import edu.fiu.adwise.ciphercraft.misc.HomomorphicException;
 
 import java.math.BigInteger;
 import java.security.KeyPair;

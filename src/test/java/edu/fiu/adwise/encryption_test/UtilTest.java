@@ -6,12 +6,12 @@ package edu.fiu.adwise.encryption_test;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
-import edu.fiu.adwise.homomorphic_encryption.dgk.DGKKeyPairGenerator;
-import edu.fiu.adwise.homomorphic_encryption.dgk.DGKPrivateKey;
-import edu.fiu.adwise.homomorphic_encryption.dgk.DGKPublicKey;
-import edu.fiu.adwise.homomorphic_encryption.paillier.PaillierKeyPairGenerator;
-import edu.fiu.adwise.homomorphic_encryption.paillier.PaillierPrivateKey;
-import edu.fiu.adwise.homomorphic_encryption.paillier.PaillierPublicKey;
+import edu.fiu.adwise.ciphercraft.dgk.DGKKeyPairGenerator;
+import edu.fiu.adwise.ciphercraft.dgk.DGKPrivateKey;
+import edu.fiu.adwise.ciphercraft.dgk.DGKPublicKey;
+import edu.fiu.adwise.ciphercraft.paillier.PaillierKeyPairGenerator;
+import edu.fiu.adwise.ciphercraft.paillier.PaillierPrivateKey;
+import edu.fiu.adwise.ciphercraft.paillier.PaillierPublicKey;
 
 import java.io.IOException;
 import java.security.KeyPair;
