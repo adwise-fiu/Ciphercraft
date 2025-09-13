@@ -4,8 +4,8 @@
  */
 package edu.fiu.adwise.encryption_test;
 
-import edu.fiu.adwise.homomorphic_encryption.misc.HomomorphicException;
-import edu.fiu.adwise.homomorphic_encryption.socialistmillionaire.bob_elgamal;
+import edu.fiu.adwise.ciphercraft.misc.HomomorphicException;
+import edu.fiu.adwise.ciphercraft.socialistmillionaire.bob_elgamal;
 
 import java.io.IOException;
 import java.net.ServerSocket;

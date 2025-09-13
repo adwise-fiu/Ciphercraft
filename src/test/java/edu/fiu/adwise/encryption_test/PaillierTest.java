@@ -4,11 +4,11 @@
  */
 package edu.fiu.adwise.encryption_test;
 
-import edu.fiu.adwise.homomorphic_encryption.paillier.*;
+import edu.fiu.adwise.ciphercraft.paillier.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import edu.fiu.adwise.homomorphic_encryption.misc.HomomorphicException;
+import edu.fiu.adwise.ciphercraft.misc.HomomorphicException;
 
 import java.math.BigInteger;
 import java.security.KeyPair;
@@ -131,10 +131,10 @@ public class PaillierTest implements constants {
 
         // sum with lists
         a = PaillierCipher.sum_product(encrypted_values, plain_values, public_key);
-        assertEquals(PaillierCipher.decrypt(a, private_key), TWO_HUNDRED);
+        assertEquals(TWO_HUNDRED, PaillierCipher.decrypt(a, private_key));
 
         a = PaillierCipher.sum_product(encrypted_list_values, plain_list_values, public_key);
-        assertEquals(PaillierCipher.decrypt(a, private_key), TWO_HUNDRED);
+        assertEquals(TWO_HUNDRED, PaillierCipher.decrypt(a, private_key));
     }
 
     @Test

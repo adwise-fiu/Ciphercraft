@@ -31,6 +31,7 @@ dependencies {
     implementation 'org.apache.logging.log4j:log4j-api:2.24.3'
     // https://mvnrepository.com/artifact/commons-io/commons-io
     implementation 'commons-io:commons-io:2.16.1'
+    implementation 'org.bouncycastle:bcprov-jdk18on:1.78'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 }
 
@@ -112,11 +113,11 @@ publishing {
             from components.java
 
             pom {
-                name.set('ciphercraft')
+                name.set('Ciphercraft')
                 description.set('This is a library that implements partially homomorphic encryption algorithms: ' +
                         'Paillier, ElGamal, and DGK. This also implements various two-party protocols for secure ' +
                         'computation such as multiplication, division and comparison')
-                url.set('https://github.com/adwise-fiu/Homomorphic_Encryption')
+                url.set('https://github.com/adwise-fiu/Ciphercraft')
 
                 licenses {
                     license {
@@ -130,35 +131,27 @@ publishing {
                         id.set('AndrewQuijano')
                         name.set('Andrew Quijano')
                         email.set('andrew.quijano@nyu.edu')
+                        roles.add('Lead Developer')
                     }
                 }
 
-                scm {
-                    connection.set('scm:git:git://github.com/adwise-fiu/Homomorphic_Encryption.git')
-                    developerConnection.set('scm:git:ssh://github.com:adwise-fiu/Homomorphic_Encryption.git')
-                    url.set('https://github.com/adwise-fiu/Homomorphic_Encryption')
+                organization {
+                    name.set('New York University')
+                    url.set('https://www.nyu.edu')
                 }
-            }
-        }
-    }
 
-    repositories {
-        maven {
-            name = "Sonatype"
-            url = version.endsWith("SNAPSHOT") ?
-                    uri("https://s01.oss.sonatype.org/content/repositories/snapshots/") :
-                    uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-
-            credentials {
-                username = findProperty("ossrhUsername") ?: System.getenv("OSSRH_USERNAME")
-                password = findProperty("ossrhPassword") ?: System.getenv("OSSRH_PASSWORD")
+                scm {
+                    connection.set('scm:git:git://github.com/adwise-fiu/Ciphercraft.git')
+                    developerConnection.set('scm:git:ssh://github.com:adwise-fiu/Ciphercraft.git')
+                    url.set('https://github.com/adwise-fiu/Ciphercraft')
+                }
             }
         }
     }
 }
 
 // Update this file, ~/.gnupg/dirmngr.conf
-// and add this line 'keyserver hkps://keyserver.ubuntu.com' to the file
+// and add this line to the file 'keyserver hkps://keyserver.ubuntu.com'
 // then run 'gpg --send-keys YOUR_KEY_ID'
 signing {
     // Point to the key file on your machine, used for local testing

@@ -4,7 +4,7 @@
  */
 package edu.fiu.adwise.encryption_test;
 
-import edu.fiu.adwise.homomorphic_encryption.elgamal.*;
+import edu.fiu.adwise.ciphercraft.elgamal.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

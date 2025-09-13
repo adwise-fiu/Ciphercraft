@@ -29,6 +29,7 @@ jobs:
           increment: ${{ env.increment }}
 
   upload_release:
+    if: github.repository == 'adwise-fiu/Ciphercraft'
     needs: [ create_release ]
     runs-on: ubuntu-latest
     steps:

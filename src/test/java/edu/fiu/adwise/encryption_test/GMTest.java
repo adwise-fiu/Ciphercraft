@@ -6,11 +6,11 @@ package edu.fiu.adwise.encryption_test;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
-import edu.fiu.adwise.homomorphic_encryption.gm.GMCipher;
-import edu.fiu.adwise.homomorphic_encryption.gm.GMKeyPairGenerator;
-import edu.fiu.adwise.homomorphic_encryption.gm.GMPrivateKey;
-import edu.fiu.adwise.homomorphic_encryption.gm.GMPublicKey;
-import edu.fiu.adwise.homomorphic_encryption.misc.HomomorphicException;
+import edu.fiu.adwise.ciphercraft.gm.GMCipher;
+import edu.fiu.adwise.ciphercraft.gm.GMKeyPairGenerator;
+import edu.fiu.adwise.ciphercraft.gm.GMPrivateKey;
+import edu.fiu.adwise.ciphercraft.gm.GMPublicKey;
+import edu.fiu.adwise.ciphercraft.misc.HomomorphicException;
 
 import java.math.BigInteger;
 import java.security.KeyPair;

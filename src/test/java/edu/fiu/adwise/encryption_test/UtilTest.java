@@ -4,14 +4,15 @@
  */
 package edu.fiu.adwise.encryption_test;
 
+import edu.fiu.adwise.ciphercraft.misc.KeyFunctions;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import edu.fiu.adwise.homomorphic_encryption.dgk.DGKKeyPairGenerator;
-import edu.fiu.adwise.homomorphic_encryption.dgk.DGKPrivateKey;
-import edu.fiu.adwise.homomorphic_encryption.dgk.DGKPublicKey;
-import edu.fiu.adwise.homomorphic_encryption.paillier.PaillierKeyPairGenerator;
-import edu.fiu.adwise.homomorphic_encryption.paillier.PaillierPrivateKey;
-import edu.fiu.adwise.homomorphic_encryption.paillier.PaillierPublicKey;
+import edu.fiu.adwise.ciphercraft.dgk.DGKKeyPairGenerator;
+import edu.fiu.adwise.ciphercraft.dgk.DGKPrivateKey;
+import edu.fiu.adwise.ciphercraft.dgk.DGKPublicKey;
+import edu.fiu.adwise.ciphercraft.paillier.PaillierKeyPairGenerator;
+import edu.fiu.adwise.ciphercraft.paillier.PaillierPrivateKey;
+import edu.fiu.adwise.ciphercraft.paillier.PaillierPublicKey;
 
 import java.io.IOException;
 import java.security.KeyPair;
@@ -46,13 +47,13 @@ public class UtilTest implements constants {
 
     @Test
     public void test_store_dgk() throws IOException, ClassNotFoundException {
-        dgk_public_key.writeKey("dgk.pub");
-        dgk_private_key.writeKey("dgk.priv");
+        KeyFunctions.writeKey(dgk_public_key, "dgk.pub");
+        KeyFunctions.writeKey(dgk_private_key, "dgk.priv");
         logger.info("DGK Write Key");
 
-        DGKPublicKey other_dgk_pub = DGKPublicKey.readKey("dgk.pub");
+        DGKPublicKey other_dgk_pub = DGKPublicKey.fromFile("dgk.pub");
         logger.info("DGK Public Read");
-        DGKPrivateKey other_dgk_private = DGKPrivateKey.readKey("dgk.priv");
+        DGKPrivateKey other_dgk_private = DGKPrivateKey.fromFile("dgk.priv");
         logger.info("DGK Public Read");
 
         assertEquals(dgk_public_key, other_dgk_pub);
@@ -61,12 +62,12 @@ public class UtilTest implements constants {
     }
 
     @Test
-    public void test_store_paillier() throws IOException, ClassNotFoundException {
-        paillier_public_key.writeKey("paillier.pub");
-        paillier_private_key.writeKey("paillier.priv");
+    public void test_store_paillier() throws IOException {
+        KeyFunctions.writeKey(paillier_public_key, "paillier.pub");
+        KeyFunctions.writeKey(paillier_private_key, "paillier.priv");
 
-        PaillierPublicKey other_paillier_pub = PaillierPublicKey.readKey("paillier.pub");
-        PaillierPrivateKey other_paillier_private = PaillierPrivateKey.readKey("paillier.priv");
+        PaillierPublicKey other_paillier_pub = PaillierPublicKey.fromFile("paillier.pub");
+        PaillierPrivateKey other_paillier_private = PaillierPrivateKey.fromFile("paillier.priv");
 
         assertEquals(paillier_public_key, other_paillier_pub);
         assertEquals(paillier_private_key, other_paillier_private);

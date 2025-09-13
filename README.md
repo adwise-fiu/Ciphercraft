@@ -1,7 +1,7 @@
 # Homomorphic Encryption
 [![Build Gradle project](https://github.com/adwise-fiu/Homomorphic_Encryption/actions/workflows/test_library.yml/badge.svg)](https://github.com/adwise-fiu/Homomorphic_Encryption/actions/workflows/test_library.yml)
 
-[![codecov](https://codecov.io/gh/adwise-fiu/Homomorphic_Encryption/branch/main/graph/badge.svg?token=OIFWDVX2SA)](https://codecov.io/gh/adwise-fiu/Homomorphic_Encryption)
+[![codecov](https://codecov.io/gh/adwise-fiu/Homomorphic_Encryption/graph/badge.svg?token=OIFWDVX2SA)](https://codecov.io/gh/adwise-fiu/Homomorphic_Encryption)
 
 Homomorphic Encryption is a Java library that implements the following partially homomorphic encryption systems:
 * Paillier  
@@ -135,4 +135,3 @@ The work to create this repository was initially funded by the US NSF REU Site a
 
 ## Project status
 The project is currently fully tested.
-Currently, the stretch goal is to implement certificates using the Bouncy Castle API for these homomorphic encryption systems.
