@@ -4,13 +4,13 @@
  */
 package edu.fiu.adwise.ciphercraft.paillier;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.math.BigInteger;
 import java.security.KeyPair;
 import java.security.KeyPairGeneratorSpi;
 import java.security.SecureRandom;
+
+import edu.fiu.adwise.ciphercraft.misc.KeyFunctions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,7 +31,7 @@ public class PaillierKeyPairGenerator extends KeyPairGeneratorSpi implements Cip
 	 *
 	 * @param args Command-line arguments (not used).
 	 */
-	public static void main(String []  args) {
+	public static void main(String []  args) throws IOException {
 		String paillier_private_key_file = "paillier.priv";
 		String paillier_public_key_file = "paillier.pub";
 		KeyPair paillier;
@@ -46,19 +46,8 @@ public class PaillierKeyPairGenerator extends KeyPairGeneratorSpi implements Cip
 		sk = (PaillierPrivateKey) paillier.getPrivate();
 
 		// Write the key to a file
-		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(paillier_public_key_file))) {
-			oos.writeObject(pk);
-			oos.flush();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-
-		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(paillier_private_key_file))) {
-			oos.writeObject(sk);
-			oos.flush();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		KeyFunctions.writeKey(pk, paillier_public_key_file);
+        KeyFunctions.writeKey(sk, paillier_private_key_file);
 	}
 
 	/**

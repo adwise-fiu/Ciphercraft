@@ -12,6 +12,7 @@ import java.security.SecureRandom;
 
 import edu.fiu.adwise.ciphercraft.misc.CipherConstants;
 import edu.fiu.adwise.ciphercraft.misc.HomomorphicException;
+import edu.fiu.adwise.ciphercraft.misc.KeyFunctions;
 import edu.fiu.adwise.ciphercraft.misc.NTL;
 
 import org.apache.logging.log4j.LogManager;
@@ -52,8 +53,8 @@ public final class DGKKeyPairGenerator extends KeyPairGeneratorSpi implements Ci
 		sk = (DGKPrivateKey) dgk.getPrivate();
 
 		// Write the key to a file
-		pk.writeKey(dgk_public_key_file);
-		sk.writeKey(dgk_private_key_file);
+        KeyFunctions.writeKey(pk, dgk_public_key_file);
+        KeyFunctions.writeKey(sk, dgk_private_key_file);
 	}
 
 	/**

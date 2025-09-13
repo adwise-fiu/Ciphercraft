@@ -13,8 +13,11 @@ import java.util.Map;
 
 import edu.fiu.adwise.ciphercraft.misc.CipherConstants;
 
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import edu.fiu.adwise.ciphercraft.misc.ObjectIdentifier;
+import org.bouncycastle.asn1.*;
 
 /**
  * Represents the private key for the ElGamal encryption scheme.
@@ -87,8 +90,7 @@ public final class ElGamalPrivateKey implements ElGamal_Key, Serializable, Priva
 	 *
 	 * @return The algorithm name, "ElGamal".
 	 */
-	public String getAlgorithm()
-	{
+	public String getAlgorithm() {
 		return "ElGamal";
 	}
 
@@ -97,8 +99,7 @@ public final class ElGamalPrivateKey implements ElGamal_Key, Serializable, Priva
 	 *
 	 * @return The format, "PKCS#8".
 	 */
-	public String getFormat() 
-	{
+	public String getFormat() {
 		return "PKCS#8";
 	}
 
@@ -107,10 +108,26 @@ public final class ElGamalPrivateKey implements ElGamal_Key, Serializable, Priva
 	 *
 	 * @return The encoded key, or null if not supported.
 	 */
-	public byte[] getEncoded() 
-	{
-		return null;
-	}
+    @Override
+    public byte[] getEncoded() {
+        try {
+            // ASN.1 sequence: [x, p, g, h, additive]
+            ASN1EncodableVector v = new org.bouncycastle.asn1.ASN1EncodableVector();
+            v.add(new ASN1Integer(x));
+            v.add(new ASN1Integer(p));
+            v.add(new ASN1Integer(g));
+            v.add(new ASN1Integer(h));
+            v.add(ASN1Boolean.getInstance(additive));
+            org.bouncycastle.asn1.ASN1Sequence seq = new DERSequence(v);
+
+            // Use a custom OID for ElGamal or a placeholder
+            org.bouncycastle.asn1.x509.AlgorithmIdentifier algId = new org.bouncycastle.asn1.x509.AlgorithmIdentifier(ObjectIdentifier.getAlgorithm(this));
+            org.bouncycastle.asn1.pkcs.PrivateKeyInfo pkInfo = new org.bouncycastle.asn1.pkcs.PrivateKeyInfo(algId, seq);
+            return pkInfo.getEncoded("DER");
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
 	/**
 	 * Generates the lookup table for decryption.
@@ -142,8 +159,7 @@ public final class ElGamalPrivateKey implements ElGamal_Key, Serializable, Priva
 	/**
 	 * Runs the decryption table generation in a separate thread.
 	 */
-	public void run() 
-	{
+	public void run() {
 		decrypt_table();
 	}
 
@@ -166,8 +182,7 @@ public final class ElGamalPrivateKey implements ElGamal_Key, Serializable, Priva
 	 *
 	 * @return The prime modulus p.
 	 */
-	public BigInteger getP() 
-	{
+	public BigInteger getP() {
 		return this.p;
 	}
 }

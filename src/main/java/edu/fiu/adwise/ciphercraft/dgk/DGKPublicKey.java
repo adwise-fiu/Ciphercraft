@@ -10,6 +10,12 @@ import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.fiu.adwise.ciphercraft.misc.KeyFunctions;
+import edu.fiu.adwise.ciphercraft.misc.ObjectIdentifier;
+import org.bouncycastle.asn1.*;
+import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
+import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
+
 import edu.fiu.adwise.ciphercraft.misc.CipherConstants;
 import edu.fiu.adwise.ciphercraft.misc.HomomorphicException;
 
@@ -18,9 +24,10 @@ import edu.fiu.adwise.ciphercraft.misc.HomomorphicException;
  * This class implements the Serializable, DGK_Key, PublicKey, Runnable, and CipherConstants interfaces.
  * It provides methods for key generation, serialization, and lookup table generation for encryption operations.
  */
-public final class DGKPublicKey implements Serializable, DGK_Key, PublicKey, Runnable, CipherConstants {
+public final class DGKPublicKey extends KeyFunctions implements Serializable, DGK_Key, PublicKey, Runnable, CipherConstants {
 	@Serial
 	private static final long serialVersionUID = -1613333167285302035L;
+
 	/** The modulus \( n \) used in the DGK cryptosystem. */
 	final BigInteger n;
 
@@ -81,39 +88,38 @@ public final class DGKPublicKey implements Serializable, DGK_Key, PublicKey, Run
 		this.k = k;
 	}
 
-	/**
-	 * Serializes the public key to a file.
-	 *
-	 * @param dgk_public_key_file The file path to save the public key.
-	 * @throws IOException If an I/O error occurs.
-	 */
-	public void writeKey(String dgk_public_key_file)  throws IOException {
-		// clear hashmaps
-		hLUT.clear();
-		gLUT.clear();
-		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(dgk_public_key_file))) {
-			oos.writeObject(this);
-			oos.flush();
-		}
-	}
+    public static DGKPublicKey fromFile(String keyFile) throws IOException {
+        byte[] encoded = KeyFunctions.readPemFile(keyFile, PUBLIC_KEY_START, PUBLIC_KEY_END);
+        return fromEncoded(encoded);
+    }
 
-	/**
-	 * Deserializes a DGKPublicKey from a file.
-	 *
-	 * @param dgk_public_key The file path to read the public key from.
-	 * @return The deserialized DGKPublicKey.
-	 * @throws IOException If an I/O error occurs.
-	 * @throws ClassNotFoundException If the class cannot be found.
-	 */
-	public static DGKPublicKey readKey(String dgk_public_key) throws IOException, ClassNotFoundException {
-		DGKPublicKey pk;
-		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(dgk_public_key))) {
-			pk = (DGKPublicKey) ois.readObject();
-		}
-		pk.generategLUT();
-		pk.generatehLUT();
-		return pk;
-	}
+    /**
+     * Reconstructs a {@code DGKPublicKey} instance from DER-encoded bytes.
+     * <p>
+     * The encoded bytes should represent a DGK public key in X.509 SubjectPublicKeyInfo format,
+     * containing the modulus, generators, subgroup order, and key parameters.
+     * </p>
+     *
+     * @param encoded the DER-encoded byte array representing the DGK public key
+     * @return a {@code DGKPublicKey} instance parsed from the encoded bytes
+     * @throws IOException if the encoded bytes cannot be parsed or are invalid
+     */
+    public static DGKPublicKey fromEncoded(byte[] encoded) throws IOException {
+        try {
+            SubjectPublicKeyInfo spki = SubjectPublicKeyInfo.getInstance(ASN1Primitive.fromByteArray(encoded));
+            ASN1Sequence seq = (ASN1Sequence) spki.parsePublicKey();
+            BigInteger n = ((ASN1Integer) seq.getObjectAt(0)).getValue();
+            BigInteger g = ((ASN1Integer) seq.getObjectAt(1)).getValue();
+            BigInteger h = ((ASN1Integer) seq.getObjectAt(2)).getValue();
+            BigInteger bigU = ((ASN1Integer) seq.getObjectAt(3)).getValue();
+            int l = ((ASN1Integer) seq.getObjectAt(4)).getValue().intValue();
+            int t = ((ASN1Integer) seq.getObjectAt(5)).getValue().intValue();
+            int k = ((ASN1Integer) seq.getObjectAt(6)).getValue().intValue();
+            return new DGKPublicKey(n, g, h, bigU, l, t, k);
+        } catch (Exception e) {
+            throw new IOException("Failed to parse encoded DGKPublicKey", e);
+        }
+    }
 
 	/**
 	 * @return The encrypted representation of 0.
@@ -167,11 +173,28 @@ public final class DGKPublicKey implements Serializable, DGK_Key, PublicKey, Run
 	}
 
 	/**
-	 * @return The encoded form of the key (currently null).
-	 */
-	public byte[] getEncoded() {
-		return null;
-	}
+     * @return The encoded form of the key (currently null).
+     */
+    @Override
+    public byte[] getEncoded() {
+        try {
+            ASN1EncodableVector v = new ASN1EncodableVector();
+            v.add(new ASN1Integer(n));
+            v.add(new ASN1Integer(g));
+            v.add(new ASN1Integer(h));
+            v.add(new ASN1Integer(bigU));
+            v.add(new ASN1Integer(l));
+            v.add(new ASN1Integer(t));
+            v.add(new ASN1Integer(k));
+            ASN1Sequence seq = new DERSequence(v);
+
+            AlgorithmIdentifier algId = new AlgorithmIdentifier(ObjectIdentifier.getAlgorithm(this));
+            SubjectPublicKeyInfo spki = new SubjectPublicKeyInfo(algId, seq);
+            return spki.getEncoded("DER");
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
 	/**
 	 * Generates the lookup tables for g and h.

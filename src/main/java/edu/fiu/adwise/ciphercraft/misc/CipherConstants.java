@@ -12,16 +12,23 @@ import java.security.SecureRandom;
  * particularly in the context of homomorphic encryption schemes.
  * It includes key sizes, mathematical constants, and utility values.
  */
-public interface CipherConstants
-{
-	/**
-	 * The default key size (in bits) for cryptographic operations.
-	 */
+public interface CipherConstants {
+    /** The starting words for a Public Key file */
+    String PUBLIC_KEY_START = "-----BEGIN PUBLIC KEY-----";
+
+    /** The ending words for a Public Key file */
+    String PUBLIC_KEY_END = "-----END PUBLIC KEY-----";
+
+    /** The starting words for a Private Key file */
+    String PRIVATE_KEY_START = "-----BEGIN PRIVATE KEY-----";
+
+    /** The ending words for a Private Key file */
+    String PRIVATE_KEY_END = "-----END PRIVATE KEY-----";
+
+    /** The default key size (in bits) for cryptographic operations. */
 	int KEY_SIZE = 2048;
 
-	/**
-	 * A secure random number generator used for cryptographic purposes.
-	 */
+	/** A secure random number generator used for cryptographic purposes. */
 	SecureRandom rnd = new SecureRandom();
 
 	/**

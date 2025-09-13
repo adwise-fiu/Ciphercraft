@@ -4,6 +4,11 @@
  */
 package edu.fiu.adwise.ciphercraft.elgamal;
 
+import edu.fiu.adwise.ciphercraft.misc.ObjectIdentifier;
+import org.bouncycastle.asn1.*;
+import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
+import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigInteger;
@@ -72,11 +77,26 @@ public final class ElGamalPublicKey implements Serializable, PublicKey, ElGamal_
 	/**
 	 * Returns the encoded form of the key.
 	 *
-	 * @return The encoded form of the key (currently null).
+	 * @return The encoded form of the key
 	 */
-	public byte[] getEncoded() {
-		return null;
-	}
+    @Override
+    public byte[] getEncoded() {
+        try {
+            ASN1EncodableVector v = new ASN1EncodableVector();
+            v.add(new ASN1Integer(p));
+            v.add(new ASN1Integer(g));
+            v.add(new ASN1Integer(h));
+            v.add(ASN1Boolean.getInstance(additive));
+            ASN1Sequence seq = new DERSequence(v);
+
+            // Use a custom OID for ElGamal or a placeholder
+            AlgorithmIdentifier algId = new AlgorithmIdentifier(ObjectIdentifier.getAlgorithm(this));
+            SubjectPublicKeyInfo spki = new SubjectPublicKeyInfo(algId, seq);
+            return spki.getEncoded("DER");
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
 	/**
 	 * Returns the prime modulus.

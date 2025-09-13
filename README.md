@@ -135,4 +135,3 @@ The work to create this repository was initially funded by the US NSF REU Site a
 
 ## Project status
 The project is currently fully tested.
-Currently, the stretch goal is to implement certificates using the Bouncy Castle API for these homomorphic encryption systems.

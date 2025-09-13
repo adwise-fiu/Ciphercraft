@@ -5,17 +5,25 @@
 package edu.fiu.adwise.ciphercraft.paillier;
 
 import edu.fiu.adwise.ciphercraft.misc.HomomorphicException;
+import edu.fiu.adwise.ciphercraft.misc.KeyFunctions;
+import edu.fiu.adwise.ciphercraft.misc.ObjectIdentifier;
+import org.bouncycastle.asn1.*;
+import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
+import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 
 import java.io.*;
 import java.math.BigInteger;
 import java.security.PublicKey;
+
+import static edu.fiu.adwise.ciphercraft.misc.CipherConstants.PUBLIC_KEY_END;
+import static edu.fiu.adwise.ciphercraft.misc.CipherConstants.PUBLIC_KEY_START;
 
 /**
  * Represents the public key for the Paillier cryptosystem.
  * This class implements the Serializable, Paillier_Key, PublicKey, Runnable, and CipherConstants interfaces.
  * It provides methods for key generation and serialization for encryption operations.
  */
-public final class PaillierPublicKey implements Serializable, PaillierKey, PublicKey {
+public final class PaillierPublicKey extends KeyFunctions implements Serializable, PaillierKey, PublicKey {
 	@Serial
 	private static final long serialVersionUID = -4009702553030484256L;
 
@@ -47,10 +55,15 @@ public final class PaillierPublicKey implements Serializable, PaillierKey, Publi
 		this.n = n;
 		this.modulus = modulus;
 		this.g = g;
-
 	}
 
-	/**
+    public static PaillierPublicKey fromFile(String keyFile) throws IOException {
+        byte[] encoded = KeyFunctions.readPemFile(keyFile, PUBLIC_KEY_START, PUBLIC_KEY_END);
+        return fromEncoded(encoded);
+    }
+
+
+    /**
 	 * Retrieves the encryption of zero using this public key.
 	 *
 	 * @return The encryption of zero as a {@link BigInteger}.
@@ -78,34 +91,21 @@ public final class PaillierPublicKey implements Serializable, PaillierKey, Publi
 	}
 
 	/**
-	 * Writes the public key to a file.
-	 *
-	 * @param paillier_public_key_file The file path to save the public key.
-	 * @throws IOException If an I/O error occurs.
-	 */
-	public void writeKey(String paillier_public_key_file) throws IOException {
-		// Write the key to a file
-		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(paillier_public_key_file))) {
-			oos.writeObject(this);
-			oos.flush();
-		}
-	}
-
-	/**
 	 * Reads a public key from a file.
 	 *
-	 * @param paillier_public_key The file path to read the public key from.
+	 * @param der encoded bytes of the key
 	 * @return The {@link PaillierPublicKey} object.
 	 * @throws IOException            If an I/O error occurs.
-	 * @throws ClassNotFoundException If the class of the serialized object cannot be found.
 	 */
-	public static PaillierPublicKey readKey(String paillier_public_key) throws IOException, ClassNotFoundException {
-		PaillierPublicKey pk;
-		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(paillier_public_key))) {
-			pk = (PaillierPublicKey) ois.readObject();
-		}
-		return pk;
-	}
+    public static PaillierPublicKey fromEncoded(byte [] der) throws IOException {
+        SubjectPublicKeyInfo spki = SubjectPublicKeyInfo.getInstance(ASN1Primitive.fromByteArray(der));
+        ASN1Sequence seq = (ASN1Sequence) spki.parsePublicKey();
+        int keySize = ((ASN1Integer) seq.getObjectAt(0)).getValue().intValue();
+        BigInteger n = ((ASN1Integer) seq.getObjectAt(1)).getValue();
+        BigInteger modulus = ((ASN1Integer) seq.getObjectAt(2)).getValue();
+        BigInteger g = ((ASN1Integer) seq.getObjectAt(3)).getValue();
+        return new PaillierPublicKey(keySize, n, modulus, g);
+    }
 
 	/**
 	 * Retrieves the value of n, which is part of the Paillier key.
@@ -148,10 +148,23 @@ public final class PaillierPublicKey implements Serializable, PaillierKey, Publi
 	 *
 	 * @return The encoded key as a byte array, or null if not supported.
 	 */
-	public byte[] getEncoded() 
-	{
-		return null;
-	}
+    @Override
+    public byte[] getEncoded() {
+        try {
+            ASN1EncodableVector v = new ASN1EncodableVector();
+            v.add(new ASN1Integer(key_size));
+            v.add(new ASN1Integer(n));
+            v.add(new ASN1Integer(modulus));
+            v.add(new ASN1Integer(g));
+            ASN1Sequence seq = new DERSequence(v);
+
+            AlgorithmIdentifier algId = new AlgorithmIdentifier(ObjectIdentifier.getAlgorithm(this));
+            SubjectPublicKeyInfo spki = new SubjectPublicKeyInfo(algId, seq);
+            return spki.getEncoded("DER");
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
 	/**
 	 * Compares this public key with another object for equality.

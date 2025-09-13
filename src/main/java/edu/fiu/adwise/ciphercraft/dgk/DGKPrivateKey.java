@@ -10,7 +10,15 @@ import java.security.PrivateKey;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.fiu.adwise.ciphercraft.misc.KeyFunctions;
 import edu.fiu.adwise.ciphercraft.misc.NTL;
+import edu.fiu.adwise.ciphercraft.misc.ObjectIdentifier;
+import org.bouncycastle.asn1.*;
+import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
+import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
+
+import static edu.fiu.adwise.ciphercraft.misc.CipherConstants.PRIVATE_KEY_END;
+import static edu.fiu.adwise.ciphercraft.misc.CipherConstants.PRIVATE_KEY_START;
 
 /**
  * Represents a DGK (Damgård-Geisler-Krøigaard) private key used for homomorphic encryption.
@@ -18,7 +26,7 @@ import edu.fiu.adwise.ciphercraft.misc.NTL;
  * It contains both private and public key parameters, as well as methods for key serialization,
  * deserialization, and lookup table generation.
  */
-public final class DGKPrivateKey implements Serializable, DGK_Key, PrivateKey {
+public final class DGKPrivateKey  extends KeyFunctions implements Serializable, DGK_Key, PrivateKey {
 	@Serial
 	private static final long serialVersionUID = 4574519230502483629L;
 
@@ -104,36 +112,39 @@ public final class DGKPrivateKey implements Serializable, DGK_Key, PrivateKey {
 		this.generategLUT();
 	}
 
-	/**
-	 * Serializes the private key to a file.
-	 *
-	 * @param dgk_private_key_file Path to the file where the private key will be saved
-	 * @throws IOException If an I/O error occurs during serialization
-	 */
-	public void writeKey(String dgk_private_key_file) throws IOException {
-		LUT.clear();
-		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(dgk_private_key_file))) {
-			oos.writeObject(this);
-			oos.flush();
-		}
-	}
+    public static DGKPrivateKey fromFile(String keyFile) throws IOException {
+        byte[] encoded = KeyFunctions.readPemFile(keyFile, PRIVATE_KEY_START, PRIVATE_KEY_END);
+        return fromEncoded(encoded);
+    }
 
-	/**
-	 * Deserializes a DGK private key from a file.
-	 *
-	 * @param dgk_private_key Path to the file containing the serialized private key
-	 * @return The deserialized DGKPrivateKey object
-	 * @throws IOException            If an I/O error occurs during deserialization
-	 * @throws ClassNotFoundException If the class of the serialized object cannot be found
-	 */
-	public static DGKPrivateKey readKey(String dgk_private_key) throws IOException, ClassNotFoundException {
-		DGKPrivateKey sk;
-		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(dgk_private_key))) {
-			sk = (DGKPrivateKey) ois.readObject();
-		}
-		sk.generategLUT();
-		return sk;
-	}
+    /**
+     * Reads and parses a DGK private key from a PEM file in PKCS#8 ASN.1 format.
+     *
+     * @param encoded the bytes read from the file
+     * @return The deserialized DGKPrivateKey object
+     * @throws IOException            If an I/O error occurs during deserialization
+     */
+    public static DGKPrivateKey fromEncoded(byte [] encoded) throws IOException {
+        PrivateKeyInfo pkInfo = PrivateKeyInfo.getInstance(ASN1Primitive.fromByteArray(encoded));
+        ASN1Sequence seq = (ASN1Sequence) pkInfo.parsePrivateKey();
+
+        BigInteger p = ((ASN1Integer) seq.getObjectAt(0)).getValue();
+        BigInteger q = ((ASN1Integer) seq.getObjectAt(1)).getValue();
+        BigInteger vp = ((ASN1Integer) seq.getObjectAt(2)).getValue();
+        BigInteger vq = ((ASN1Integer) seq.getObjectAt(3)).getValue();
+        BigInteger n = ((ASN1Integer) seq.getObjectAt(4)).getValue();
+        BigInteger g = ((ASN1Integer) seq.getObjectAt(5)).getValue();
+        BigInteger h = ((ASN1Integer) seq.getObjectAt(6)).getValue();
+        long u = ((ASN1Integer) seq.getObjectAt(7)).getValue().longValue();
+        int l = ((ASN1Integer) seq.getObjectAt(8)).getValue().intValue();
+        int t = ((ASN1Integer) seq.getObjectAt(9)).getValue().intValue();
+        int k = ((ASN1Integer) seq.getObjectAt(10)).getValue().intValue();
+
+        DGKPublicKey pubKey = new DGKPublicKey(n, g, h, BigInteger.valueOf(u), l, t, k);
+        DGKPrivateKey sk = new DGKPrivateKey(p, q, vp, vq, pubKey);
+        sk.generategLUT();
+        return sk;
+    }
 
 	/**
 	 * Generates the lookup table (LUT) for decryption.
@@ -218,9 +229,30 @@ public final class DGKPrivateKey implements Serializable, DGK_Key, PrivateKey {
 	 *
 	 * @return null
 	 */
-	public byte[] getEncoded() {
-		return null;
-	}
+    public byte[] getEncoded() {
+        try {
+            ASN1EncodableVector v = new ASN1EncodableVector();
+            v.add(new ASN1Integer(p));
+            v.add(new ASN1Integer(q));
+            v.add(new ASN1Integer(vp));
+            v.add(new ASN1Integer(vq));
+            v.add(new ASN1Integer(n));
+            v.add(new ASN1Integer(g));
+            v.add(new ASN1Integer(h));
+            v.add(new ASN1Integer(u));
+            v.add(new ASN1Integer(l));
+            v.add(new ASN1Integer(t));
+            v.add(new ASN1Integer(k));
+
+            ASN1Sequence seq = new DERSequence(v);
+            AlgorithmIdentifier algId = new AlgorithmIdentifier(ObjectIdentifier.getAlgorithm(this));
+            PrivateKeyInfo pkInfo = new PrivateKeyInfo(algId, seq);
+            return pkInfo.getEncoded();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 
 	/**
 	 * Compares this DGKPrivateKey with another object for equality.

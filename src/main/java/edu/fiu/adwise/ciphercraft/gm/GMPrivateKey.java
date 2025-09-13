@@ -9,6 +9,11 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.PrivateKey;
 
+import edu.fiu.adwise.ciphercraft.misc.ObjectIdentifier;
+import org.bouncycastle.asn1.*;
+import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
+import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
+
 /**
  * This class represents the private key for the Goldwasser-Micali (GM) encryption scheme.
  * It implements the {@link PrivateKey} and {@link GMKey} interfaces and provides access
@@ -65,7 +70,20 @@ public class GMPrivateKey implements Serializable, PrivateKey, GMKey
 	 * @return A byte array representing the encoded key, or {@code null}.
 	 */
 	public byte[] getEncoded() {
-		return null;
+        try {
+            ASN1EncodableVector v = new ASN1EncodableVector();
+            v.add(new ASN1Integer(p));
+            v.add(new ASN1Integer(q));
+            v.add(new ASN1Integer(n));
+            ASN1Sequence seq = new DERSequence(v);
+
+            // Use a custom OID for Goldwasser-Micali (replace with your actual OID if available)
+            AlgorithmIdentifier algId = new AlgorithmIdentifier(ObjectIdentifier.getAlgorithm(this));
+            PrivateKeyInfo pkInfo = new PrivateKeyInfo(algId, seq);
+            return pkInfo.getEncoded("DER");
+        } catch (Exception e) {
+            return null;
+        }
 	}
 
 	/**

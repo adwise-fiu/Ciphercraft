@@ -9,6 +9,11 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.PublicKey;
 
+import edu.fiu.adwise.ciphercraft.misc.ObjectIdentifier;
+import org.bouncycastle.asn1.*;
+import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
+import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
+
 /**
  * This class represents the public key for the Goldwasser-Micali (GM) encryption scheme.
  * It implements the {@link PublicKey} and {@link GMKey} interfaces and provides access
@@ -58,9 +63,22 @@ public class GMPublicKey implements Serializable, PublicKey, GMKey {
 	 *
 	 * @return A byte array representing the encoded key, or {@code null}.
 	 */
-	public byte[] getEncoded() {
-		return null;
-	}
+    @Override
+    public byte[] getEncoded() {
+        try {
+            ASN1EncodableVector v = new ASN1EncodableVector();
+            v.add(new ASN1Integer(n));
+            v.add(new ASN1Integer(y));
+            ASN1Sequence seq = new DERSequence(v);
+
+            // Use a custom OID for Goldwasser-Micali (replace with your actual OID if available)
+            AlgorithmIdentifier algId = new AlgorithmIdentifier(ObjectIdentifier.getAlgorithm(this));
+            SubjectPublicKeyInfo spki = new SubjectPublicKeyInfo(algId, seq);
+            return spki.getEncoded("DER");
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
 	/**
 	 * Retrieves the modulus \( n \) associated with this public key.

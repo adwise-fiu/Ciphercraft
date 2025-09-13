@@ -31,6 +31,7 @@ dependencies {
     implementation 'org.apache.logging.log4j:log4j-api:2.24.3'
     // https://mvnrepository.com/artifact/commons-io/commons-io
     implementation 'commons-io:commons-io:2.16.1'
+    implementation 'org.bouncycastle:bcprov-jdk18on:1.78'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 }
 
@@ -147,24 +148,10 @@ publishing {
             }
         }
     }
-
-    repositories {
-        maven {
-            name = "Sonatype"
-            url = version.endsWith("SNAPSHOT") ?
-                    uri("https://s01.oss.sonatype.org/content/repositories/snapshots/") :
-                    uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-
-            credentials {
-                username = findProperty("ossrhUsername") ?: System.getenv("OSSRH_USERNAME")
-                password = findProperty("ossrhPassword") ?: System.getenv("OSSRH_PASSWORD")
-            }
-        }
-    }
 }
 
 // Update this file, ~/.gnupg/dirmngr.conf
-// and add this line 'keyserver hkps://keyserver.ubuntu.com' to the file
+// and add this line to the file 'keyserver hkps://keyserver.ubuntu.com'
 // then run 'gpg --send-keys YOUR_KEY_ID'
 signing {
     // Point to the key file on your machine, used for local testing
