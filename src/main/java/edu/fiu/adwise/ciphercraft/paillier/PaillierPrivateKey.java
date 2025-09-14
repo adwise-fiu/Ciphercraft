@@ -74,6 +74,13 @@ public final class PaillierPrivateKey extends KeyFunctions implements Serializab
 		this.rho = PaillierCipher.L(this.g.modPow(this.lambda, this.modulus), this.n).modInverse(this.modulus);
 	}
 
+    /**
+     * Loads a Paillier private key from a PEM-encoded file.
+     *
+     * @param keyFile the path to the PEM file containing the private key
+     * @return a {@link PaillierPrivateKey} instance parsed from the file
+     * @throws IOException if an error occurs while reading or parsing the file
+     */
     public static PaillierPrivateKey fromFile(String keyFile) throws IOException {
         byte[] encoded = KeyFunctions.readPemFile(keyFile, PRIVATE_KEY_START, PRIVATE_KEY_END);
         return fromEncoded(encoded);

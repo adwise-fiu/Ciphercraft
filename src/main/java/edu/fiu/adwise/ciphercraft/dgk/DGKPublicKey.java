@@ -88,6 +88,13 @@ public final class DGKPublicKey extends KeyFunctions implements Serializable, DG
 		this.k = k;
 	}
 
+    /**
+     * Loads a DGK public key from a PEM-encoded file.
+     *
+     * @param keyFile the path to the PEM file containing the public key
+     * @return a {@link DGKPublicKey} instance parsed from the file
+     * @throws IOException if an error occurs while reading or parsing the file
+     */
     public static DGKPublicKey fromFile(String keyFile) throws IOException {
         byte[] encoded = KeyFunctions.readPemFile(keyFile, PUBLIC_KEY_START, PUBLIC_KEY_END);
         return fromEncoded(encoded);

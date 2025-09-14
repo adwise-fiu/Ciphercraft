@@ -13,6 +13,7 @@ import java.util.Map;
 import edu.fiu.adwise.ciphercraft.misc.KeyFunctions;
 import edu.fiu.adwise.ciphercraft.misc.NTL;
 import edu.fiu.adwise.ciphercraft.misc.ObjectIdentifier;
+import edu.fiu.adwise.ciphercraft.paillier.PaillierPublicKey;
 import org.bouncycastle.asn1.*;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
@@ -112,6 +113,13 @@ public final class DGKPrivateKey  extends KeyFunctions implements Serializable, 
 		this.generategLUT();
 	}
 
+    /**
+     * Loads a DGK private key from a PEM-encoded file.
+     *
+     * @param keyFile the path to the PEM file containing the private key
+     * @return a {@link DGKPrivateKey} instance parsed from the file
+     * @throws IOException if an error occurs while reading or parsing the file
+     */
     public static DGKPrivateKey fromFile(String keyFile) throws IOException {
         byte[] encoded = KeyFunctions.readPemFile(keyFile, PRIVATE_KEY_START, PRIVATE_KEY_END);
         return fromEncoded(encoded);

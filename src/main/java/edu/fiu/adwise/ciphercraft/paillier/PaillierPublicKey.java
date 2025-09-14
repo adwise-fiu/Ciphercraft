@@ -57,11 +57,17 @@ public final class PaillierPublicKey extends KeyFunctions implements Serializabl
 		this.g = g;
 	}
 
+    /**
+     * Loads a Paillier public key from a PEM-encoded file.
+     *
+     * @param keyFile the path to the PEM file containing the public key
+     * @return a {@link PaillierPublicKey} instance parsed from the file
+     * @throws IOException if an error occurs while reading or parsing the file
+     */
     public static PaillierPublicKey fromFile(String keyFile) throws IOException {
         byte[] encoded = KeyFunctions.readPemFile(keyFile, PUBLIC_KEY_START, PUBLIC_KEY_END);
         return fromEncoded(encoded);
     }
-
 
     /**
 	 * Retrieves the encryption of zero using this public key.

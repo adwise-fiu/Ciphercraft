@@ -30,6 +30,7 @@ public class PaillierKeyPairGenerator extends KeyPairGeneratorSpi implements Cip
 	 * Main method to generate and save Paillier public and private keys to files.
 	 *
 	 * @param args Command-line arguments (not used).
+     * @throws IOException If an I/O error occurs during key file writing.
 	 */
 	public static void main(String []  args) throws IOException {
 		String paillier_private_key_file = "paillier.priv";
